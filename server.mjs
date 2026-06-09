@@ -114,13 +114,31 @@ async function main() {
 
   const child = spawn(process.execPath, args, { stdio: 'inherit' })
 
-  const forwardSignal = (sig) => { try { child.kill(sig) } catch {} }
+  let signalTimeout = null
+  const SIGNAL_EXIT_BASE = 128
+  const SIGNO = { SIGTERM: 15, SIGINT: 2, SIGKILL: 9, SIGHUP: 1, SIGQUIT: 3 }
+
+  const forwardSignal = (sig) => {
+    try { child.kill(sig) } catch {}
+    // 若子进程 10 秒后仍未退出，强制 SIGKILL
+    if (!signalTimeout) {
+      signalTimeout = setTimeout(() => {
+        try { child.kill('SIGKILL') } catch {}
+        process.exit(SIGNAL_EXIT_BASE + (SIGNO[sig] ?? 15))
+      }, 10_000)
+    }
+  }
   process.on('SIGINT',  () => forwardSignal('SIGINT'))
   process.on('SIGTERM', () => forwardSignal('SIGTERM'))
 
   child.on('exit', async (code, sig) => {
-    await teardown()
-    if (sig) process.kill(process.pid, sig)
+    if (signalTimeout) clearTimeout(signalTimeout)
+    try {
+      await teardown()
+    } catch (e) {
+      log(`teardown failed during exit: ${e?.message ?? e}`)
+    }
+    if (sig) process.exit(SIGNAL_EXIT_BASE + (SIGNO[sig] ?? 15))
     else process.exit(code ?? 1)
   })
 }
