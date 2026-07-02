@@ -14,10 +14,20 @@ When the wrapper exits, the `hdc fport` rule is cleaned up.
 ## Install
 
 ```sh
-npm i -g ohos-playwright ohos-chrome-devtools-mcp chrome-devtools-mcp
+npm i -g ohos-playwright@^0.6.0 ohos-chrome-devtools-mcp@^0.2.0 chrome-devtools-mcp
 ```
 
 `ohos-playwright` and `chrome-devtools-mcp` are peer dependencies — npm 7+ installs them alongside automatically when you install this package globally.
+
+## Compatibility
+
+| ohos-chrome-devtools-mcp | ohos-playwright |
+|---|---|
+| 0.2.x | ≥0.6.0 |
+| 0.1.x | ≥0.2.9 |
+
+ohos-playwright 0.6.0+: **MainAbility** (multi-tab browser) is the default.
+CustomTabAbility (single-page) is available via `OHOS_PW_CUSTOM_TAB=1`.
 
 ## MCP client configuration
 
