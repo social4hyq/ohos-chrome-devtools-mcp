@@ -1,6 +1,6 @@
 {
   "name": "ohos-chrome-devtools-mcp",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Thin wrapper that bridges OpenHarmony ArkWeb (via hdc fport) to chrome-devtools-mcp. The OHOS counterpart of @modelcontextprotocol/chrome-devtools.",
   "type": "module",
   "bin": {
@@ -37,7 +37,7 @@
     "node": ">=24"
   },
   "peerDependencies": {
-    "ohos-playwright": ">=0.2.9",
+    "ohos-playwright": ">=0.6.0",
     "chrome-devtools-mcp": ">=1.1.0"
   },
   "publishConfig": {
